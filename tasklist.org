@@ -1,0 +1,10 @@
+* Open Tasks
+** TODO Get the c-function working
+** TODO Get the python-wrapper workin
+** TODO Cleanly integrate the c-extension in the python module. 
+https://stackoverflow.com/questions/15161277/python-c-ext-namespace-mixed-with-regular-python-submodules
+https://stackoverflow.com/questions/1013449/combining-c-and-python-functions-in-a-module
+** TODO Clean up the code
+** TODO Improve the pointer passing
+** TODO Compare python and perl 
+** TODO Begin to use python capsules instead of the long int pointer setup. 
