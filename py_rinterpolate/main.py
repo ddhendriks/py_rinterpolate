@@ -119,7 +119,7 @@ class Rinterpolate(object):
         # Free the C_table by passing the memory location to the free-ing function
         if self._localcache["C_table"]:
             if self._localcache["C_table"] != 0:
-                _py_rinterpolate.rinterpolate_free_C_table(
+                _py_rinterpolate._rinterpolate_free_C_table(
                     self._localcache["C_table"]
                 )  # API call
 

@@ -60,7 +60,7 @@ PY_RINTERPOLATE_MODULE = Extension(
 setup(
     name="py_rinterpolate",
     version="0.1",
-    description="description",
+    description="Python wrapper for the linear interpolation libryary rinterpolate (https://gitlab.eps.surrey.ac.uk/ri0005/librinterpolate)",
     author="David Hendriks, Robert Izzard",
     author_email="davidhendriks93@gmail.com/d.hendriks@surrey.ac.uk,\
         r.izzard@surrey.ac.uk/rob.izzard@gmail.com",
