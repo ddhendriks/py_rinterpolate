@@ -1,5 +1,4 @@
 # Readme for py_rinterpolate
-
 This package contains a python wrapper for the rinterpolate library by Rob Izzard (see https://gitlab.eps.surrey.ac.uk/ri0005/librinterpolate)
 
 ## Installation:
@@ -23,7 +22,7 @@ Make sure that the location where `rinterpolate-config` is installed is included
 To install this package via pip:
 
 ```
-pip install py_rinterpolate
+pip install py-rinterpolate
 ```
 
 If you build this package manually, then:
@@ -36,7 +35,7 @@ Using `install` will install the package in the site_packages of the currently u
 
 In case you don't have permissions to install things globally, you can append `--user` to either of the above lines, like:
 ```
-pip install --user py_rinterpolate
+pip install --user py-rinterpolate
 
 or
 

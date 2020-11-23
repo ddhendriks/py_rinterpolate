@@ -59,20 +59,19 @@ PY_RINTERPOLATE_MODULE = Extension(
 
 setup(
     name="py_rinterpolate",
-    version="0.1",
+    version="0.11",
     description="Python wrapper for the linear interpolation libryary rinterpolate (https://gitlab.eps.surrey.ac.uk/ri0005/librinterpolate)",
     author="David Hendriks, Robert Izzard",
-    author_email="davidhendriks93@gmail.com/d.hendriks@surrey.ac.uk,\
-        r.izzard@surrey.ac.uk/rob.izzard@gmail.com",
+    author_email="davidhendriks93@gmail.com",
     maintainer="David Hendriks",
     maintainer_email="davidhendriks93@gmail.com",
+    long_description_content_type='text/markdown',
     long_description=readme(),
     keywords=["linear interpolation", "science"],
     license="GPL",
-    url="https://gitlab.eps.surrey.ac.uk/ri0005/binary_c-python",
+    url="https://github.com/ddhendriks/py_rinterpolate",
     install_requires=["numpy", "pytest"],
     python_requires='>=3.6',
-    # license=license(),
     ext_modules=[PY_RINTERPOLATE_MODULE],
     packages=[
         "py_rinterpolate",
