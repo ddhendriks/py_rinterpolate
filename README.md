@@ -6,7 +6,6 @@ This package contains a python wrapper for the rinterpolate library by Rob Izzar
 ### Pre-requisites
 This code is written in python3.6, and uses NumPy.
 
-
 To use the package it is necessary to have the rinterpolate library installed properly (not the version shipped with binary_c). 
 
 Installation of that package is straightforward:
@@ -18,14 +17,7 @@ make
 make install
 ```
 
-Make sure that the location where `rinterpolate-config` is installed is included in your `$PATH` variable.   
-
-
-The location of the directory containing the header `rinterpolate.h` needs to be contained in the envvar `C_INCLUDE_PATH`. 
-
-The location of the directory containing the shared library `librinterpolate.so` needs to be contained in the envvar `LD_LIBRARY_PATH`
-
-Make sure both of these are the case.
+Make sure that the location where `rinterpolate-config` is installed is included in your `$PATH` variable. We use `interpolate-config` to get the location of the header en library files. 
 
 ### Installation
 To install this package via pip:
@@ -62,7 +54,7 @@ Contains the python-C interface functions that communicate with the shared libra
 ### py_rinterpolate
 Contains the python class Rinterpolate which contains the controller functionality: 
 
-it handles a table as input and will call `py_rinterpolate_interface` functions to interface with the actual library.
+it handles a table as input and will call `_py_rinterpolate` functions to interface with the actual library.
 
 It also handles handles the allocation of workspaces and the freeing of the memory, all via interface functions stored in the `_py_rinterpolate` C-extension. 
 
@@ -71,14 +63,13 @@ The entry point object is the Rinterpolate object. An example of usage is shown 
 
 ```
 data_table = <your table> # This data table is the table you interpolate on, can be a nested list or a nested numpy array of type float64  
-input_list = 
+input_list = <your coordinates> # list of the coordinates you want to have the interpolation to. Should contain <data_nparams> of items.
 
 data_nparams = 3 # amount of parameters in the table
-test_data_ndata = 10 # amount of different data points per line in the table
+data_ndata = 10 # amount of different data points per line in the table
 
 # setting up the interpolator and loading in the table
-rinterpolator = Rinterpolate(test_data_table, test_data_nparams, test_data_ndata)
+rinterpolator = Rinterpolate(data_table, data_nparams, data_ndata)
 
-result_local = rinterpolator.interpolate([float(el) for el in input_list])
-
+result = rinterpolator.interpolate(input_list)
 ```

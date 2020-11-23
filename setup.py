@@ -4,8 +4,8 @@ Setup script for py_rinterpolate
 https://docs.python.org/2.5/dist/describing-extensions.html
 """
 
+import setuptools
 from distutils.core import setup, Extension
-
 
 import os
 import subprocess
@@ -64,17 +64,22 @@ setup(
     author="David Hendriks, Robert Izzard",
     author_email="davidhendriks93@gmail.com/d.hendriks@surrey.ac.uk,\
         r.izzard@surrey.ac.uk/rob.izzard@gmail.com",
+    maintainer="David Hendriks",
+    maintainer_email="davidhendriks93@gmail.com",
     long_description=readme(),
+    keywords=["linear interpolation", "science"],
+    license="GPL",
     url="https://gitlab.eps.surrey.ac.uk/ri0005/binary_c-python",
     install_requires=["numpy", "pytest"],
     python_requires='>=3.6',
-    license=license(),
+    # license=license(),
     ext_modules=[PY_RINTERPOLATE_MODULE],
     packages=[
         "py_rinterpolate",
     ],
     classifiers=[
         "Development Status :: 3 - Alpha",
+        "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)"
         "Intended Audience :: Developers",
         "Intended Audience :: Science/Research",
         "Operating System :: POSIX :: Linux",

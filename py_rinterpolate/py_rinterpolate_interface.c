@@ -155,11 +155,11 @@ static PyObject* rinterpolate_free_dataspace_wrapper(PyObject *self, PyObject *a
         rinterpolate_free_data(rinterpolate_data);
         free(rinterpolate_data);
 
-        if(rinterpolate_data != NULL)
-        {
-            debug_printf("rinterpolate_free_dataspace_wrapper: dataspace free rinterpolate_data 2 (regular free) %p\n", rinterpolate_data);
-            free(rinterpolate_data);
-        }
+        // if(rinterpolate_data != NULL)
+        // {
+        //     debug_printf("rinterpolate_free_dataspace_wrapper: dataspace free rinterpolate_data 2 (regular free) %p\n", rinterpolate_data);
+        //     free(rinterpolate_data);
+        // }
     }
 
     Py_RETURN_NONE;
