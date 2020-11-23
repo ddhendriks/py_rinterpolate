@@ -20,7 +20,7 @@ def readme():
 
 def license():
     """Opens license file and returns the content"""
-    with open("LICENSE.md") as file:
+    with open("LICENSE") as file:
         return file.read()
 
 # Interface with the rinterpolate-config to get the locations of the libraries and include directories. 
@@ -66,7 +66,8 @@ setup(
         r.izzard@surrey.ac.uk/rob.izzard@gmail.com",
     long_description=readme(),
     url="https://gitlab.eps.surrey.ac.uk/ri0005/binary_c-python",
-    install_requires=["numpy", "pytest",],
+    install_requires=["numpy", "pytest"],
+    python_requires='>=3.6',
     license=license(),
     ext_modules=[PY_RINTERPOLATE_MODULE],
     packages=[
@@ -77,9 +78,8 @@ setup(
         "Intended Audience :: Developers",
         "Intended Audience :: Science/Research",
         "Operating System :: POSIX :: Linux",
-        "Programming Language :: Python",
+        "Programming Language :: Python :: 3",
         "Programming Language :: C",
-        "Topic :: Communications :: Email",
         "Topic :: Education",
         "Topic :: Scientific/Engineering :: Physics",
         "Topic :: Software Development :: Libraries :: Python Modules",
