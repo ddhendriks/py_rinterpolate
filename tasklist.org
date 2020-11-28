@@ -1,10 +1,17 @@
 * Open Tasks
-** TODO Get the c-function working
-** TODO Get the python-wrapper workin
-** TODO Cleanly integrate the c-extension in the python module. 
+** DONE Get the c-function working
+CLOSED: [2020-11-27 Fri 13:06]
+** DONE Get the python-wrapper workin
+CLOSED: [2020-11-27 Fri 13:06]
+** DONE Cleanly integrate the c-extension in the python module. 
+CLOSED: [2020-11-27 Fri 13:06]
 https://stackoverflow.com/questions/15161277/python-c-ext-namespace-mixed-with-regular-python-submodules
 https://stackoverflow.com/questions/1013449/combining-c-and-python-functions-in-a-module
-** TODO Clean up the code
+** DONE Clean up the code
+CLOSED: [2020-11-27 Fri 13:06]
 ** TODO Improve the pointer passing
-** TODO Compare python and perl 
+** DONE Compare python and perl 
+CLOSED: [2020-11-27 Fri 13:06]
 ** TODO Begin to use python capsules instead of the long int pointer setup. 
+** TODO Move everything to using numpy array (when passing things to c-function. so using pyvector or something)
+https://scipy-cookbook.readthedocs.io/items/C_Extensions_NumPy_arrays.html
