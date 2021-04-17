@@ -17,7 +17,6 @@ def readme():
     with open("README.md") as file:
         return file.read()
 
-
 def license():
     """Opens license file and returns the content"""
     with open("LICENSE") as file:
