@@ -17,45 +17,48 @@ def readme():
     with open("README.md") as file:
         return file.read()
 
+
 def license():
     """Opens license file and returns the content"""
     with open("LICENSE") as file:
         return file.read()
 
-# Interface with the rinterpolate-config to get the locations of the libraries and include directories. 
-RINTERPOLATE_CONFIG = "rinterpolate-config"
-
-RINTERPOLATE_INCDIR = (
-    subprocess.run(
-        [RINTERPOLATE_CONFIG, "cflags"], stdout=subprocess.PIPE, check=True
-    )
-    .stdout.decode("utf-8")
-    .split("I")[-1].strip()
-)
-
-RINTERPOLATE_LIBDIRS = (
-    subprocess.run(
-        [RINTERPOLATE_CONFIG, "libs"], stdout=subprocess.PIPE, check=True
-    )
-    .stdout.decode("utf-8")
-    .split("L")[-1].strip()
-)
 
 ############################################################
 # Making the extension function
 ############################################################
 
+# Find all the files of the rinterpolate and add them to the sources
+librinterpolate_src_path = "src/librinterpolate/src"
+
+path_contents = os.listdir(librinterpolate_src_path)
+
+c_files = [
+    os.path.join(librinterpolate_src_path, file)
+    for file in path_contents
+    if file.endswith(".c")
+]
+SOURCES = ["src/py_rinterpolate_interface.c"] + c_files
+
 PY_RINTERPOLATE_MODULE = Extension(
     name="py_rinterpolate._py_rinterpolate",
-    sources=[
-        "py_rinterpolate/py_rinterpolate_interface.c"
+    sources=SOURCES,
+    include_dirs=["/usr/local/include", "src/", librinterpolate_src_path,],
+    extra_compile_args=[
+        "-O3",
+        "-Wpedantic",
+        "-fPIC",
+        "-g",
+        "-Wstrict-prototypes",
+        "-Wno-nonnull-compare",
+        "-std=gnu99",
+        "-Wall",
+        "-Wformat-signedness",
+        "-D__RINTERPOLATE__",
+        "-Wformat",
+        "-D__RINTERPOLATE_BUILD_BUILD_FLAGS__ ",
     ],
-    libraries=[
-        "rinterpolate"
-    ],  # since rinterpolate is the actual library we want to interface with.
-    library_dirs=[RINTERPOLATE_LIBDIRS],  # Use the location that rinterpolate-config gave us
-    include_dirs=[RINTERPOLATE_INCDIR],  # Use the location that rinterpolate-config gave us
-    # define_macros=[('DEBUG', None)],
+    define_macros=[("DEBUG", None)],
 )
 
 setup(
@@ -66,20 +69,15 @@ setup(
     author_email="davidhendriks93@gmail.com",
     maintainer="David Hendriks",
     maintainer_email="davidhendriks93@gmail.com",
-    long_description_content_type='text/markdown',
+    long_description_content_type="text/markdown",
     long_description=readme(),
     keywords=["linear interpolation", "science"],
     license="GPL",
     url="https://github.com/ddhendriks/py_rinterpolate",
-    install_requires=[
-        "numpy", 
-        "pytest",
-    ],
-    python_requires='>=3.6',
+    install_requires=["numpy", "pytest",],
+    python_requires=">=3.6",
     ext_modules=[PY_RINTERPOLATE_MODULE],
-    packages=[
-        "py_rinterpolate",
-    ],
+    packages=["py_rinterpolate",],
     classifiers=[
         "Development Status :: 3 - Alpha",
         "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
