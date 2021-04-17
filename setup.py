@@ -47,7 +47,9 @@ RINTERPOLATE_LIBDIRS = (
 
 PY_RINTERPOLATE_MODULE = Extension(
     name="py_rinterpolate._py_rinterpolate",
-    sources=["py_rinterpolate/py_rinterpolate_interface.c"],
+    sources=[
+        "py_rinterpolate/py_rinterpolate_interface.c"
+    ],
     libraries=[
         "rinterpolate"
     ],  # since rinterpolate is the actual library we want to interface with.
@@ -69,7 +71,10 @@ setup(
     keywords=["linear interpolation", "science"],
     license="GPL",
     url="https://github.com/ddhendriks/py_rinterpolate",
-    install_requires=["numpy", "pytest"],
+    install_requires=[
+        "numpy", 
+        "pytest",
+    ],
     python_requires='>=3.6',
     ext_modules=[PY_RINTERPOLATE_MODULE],
     packages=[
