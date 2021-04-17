@@ -1,0 +1,214 @@
+
+Intel(R) Core(TM) i7-5960X CPU @ 3.00GHz
+
+-------------
+
+gcc-8 O3
+
+Fixed input tests
+Without cache :   57.091, maxdiff 0.0000 %
+   With cache :   13.743, maxdiff = 0.0000 %
+Cache speed up : 315.422 %
+
+Random input tests
+Without cache :  109.624, maxdiff 0.0001 %
+   With cache :  121.301, maxdiff = 0.0001 %
+Cache speed up : -10.6515 %
+Spun input (n=5) tests 
+   With cache_length  0 :    6.274, maxdiff = 0.0000 %
+                  Cache speed up : 0.000 %
+   With cache_length  1 :    7.157, maxdiff = 0.0000 %
+                  Cache speed up : -14.089 %
+   With cache_length  2 :    9.137, maxdiff = 0.0000 %
+                  Cache speed up : -45.643 %
+   With cache_length  3 :    8.452, maxdiff = 0.0000 %
+                  Cache speed up : -34.718 %
+   With cache_length  4 :    7.792, maxdiff = 0.0000 %
+                  Cache speed up : -24.205 %
+   With cache_length  5 :    2.263, maxdiff = 0.0000 %
+                  Cache speed up : 177.264 %
+   With cache_length  6 :    2.261, maxdiff = 0.0000 %
+                  Cache speed up : 177.447 %
+   With cache_length  7 :    2.268, maxdiff = 0.0000 %
+                  Cache speed up : 176.603 %
+   With cache_length  8 :    2.312, maxdiff = 0.0000 %
+                  Cache speed up : 171.380 %
+   With cache_length  9 :    2.397, maxdiff = 0.0000 %
+                  Cache speed up : 161.740 %
+
+------------------------------------------------------------
+
+gcc-8 O2
+
+Fixed input tests
+Without cache :   53.337, maxdiff 0.0000 %
+   With cache :   18.462, maxdiff = 0.0000 %
+Cache speed up : 188.895 %
+
+Random input tests
+Without cache :  100.039, maxdiff 0.0001 %
+   With cache :  114.300, maxdiff = 0.0001 %
+Cache speed up : -14.2549 %
+Spun input (n=5) tests 
+   With cache_length  0 :    5.578, maxdiff = 0.0001 %
+                  Cache speed up : 0.000 %
+   With cache_length  1 :    6.560, maxdiff = 0.0001 %
+                  Cache speed up : -17.617 %
+   With cache_length  2 :    7.073, maxdiff = 0.0001 %
+                  Cache speed up : -26.809 %
+   With cache_length  3 :    6.929, maxdiff = 0.0001 %
+                  Cache speed up : -24.221 %
+   With cache_length  4 :    6.882, maxdiff = 0.0001 %
+                  Cache speed up : -23.386 %
+   With cache_length  5 :    2.110, maxdiff = 0.0001 %
+                  Cache speed up : 164.369 %
+   With cache_length  6 :    2.137, maxdiff = 0.0001 %
+                  Cache speed up : 160.997 %
+   With cache_length  7 :    2.162, maxdiff = 0.0001 %
+                  Cache speed up : 157.960 %
+   With cache_length  8 :    2.166, maxdiff = 0.0001 %
+                  Cache speed up : 157.461 %
+   With cache_length  9 :    2.213, maxdiff = 0.0001 %
+                  Cache speed up : 151.992 %
+
+------------------------------------------------------------
+
+gcc-8 O3 pgo
+
+Fixed input tests
+Without cache :   36.120, maxdiff 0.0000 %
+   With cache :   19.510, maxdiff = 0.0000 %
+Cache speed up : 85.139 %
+
+Random input tests
+Without cache :  109.246, maxdiff 0.0001 %
+   With cache :  119.688, maxdiff = 0.0001 %
+Cache speed up : -9.5583 %
+Spun input (n=5) tests 
+   With cache_length  0 :    3.553, maxdiff = 0.0000 %
+                  Cache speed up : 0.000 %
+   With cache_length  1 :    4.040, maxdiff = 0.0000 %
+                  Cache speed up : -13.690 %
+   With cache_length  2 :    4.258, maxdiff = 0.0000 %
+                  Cache speed up : -19.836 %
+   With cache_length  3 :    4.549, maxdiff = 0.0000 %
+                  Cache speed up : -28.017 %
+   With cache_length  4 :    4.560, maxdiff = 0.0000 %
+                  Cache speed up : -28.330 %
+   With cache_length  5 :    2.009, maxdiff = 0.0000 %
+                  Cache speed up : 76.876 %
+   With cache_length  6 :    2.021, maxdiff = 0.0000 %
+                  Cache speed up : 75.786 %
+   With cache_length  7 :    2.055, maxdiff = 0.0000 %
+                  Cache speed up : 72.871 %
+   With cache_length  8 :    2.068, maxdiff = 0.0000 %
+                  Cache speed up : 71.786 %
+   With cache_length  9 :    2.195, maxdiff = 0.0000 %
+                  Cache speed up : 61.912 %
+
+------------------------------------------------------------
+gcc-8 O2 pgo
+
+Fixed input tests
+Without cache :   33.898, maxdiff 0.0000 %
+   With cache :   17.995, maxdiff = 0.0000 %
+Cache speed up : 88.375 %
+
+Random input tests
+Without cache :  109.224, maxdiff 0.0001 %
+   With cache :  120.231, maxdiff = 0.0001 %
+Cache speed up : -10.0769 %
+Spun input (n=5) tests 
+   With cache_length  0 :    3.420, maxdiff = 0.0000 %
+                  Cache speed up : 0.000 %
+   With cache_length  1 :    4.021, maxdiff = 0.0000 %
+                  Cache speed up : -17.584 %
+   With cache_length  2 :    4.480, maxdiff = 0.0000 %
+                  Cache speed up : -31.014 %
+   With cache_length  3 :    4.568, maxdiff = 0.0000 %
+                  Cache speed up : -33.572 %
+   With cache_length  4 :    4.658, maxdiff = 0.0000 %
+                  Cache speed up : -36.221 %
+   With cache_length  5 :    1.983, maxdiff = 0.0000 %
+                  Cache speed up : 72.447 %
+   With cache_length  6 :    1.953, maxdiff = 0.0000 %
+                  Cache speed up : 75.095 %
+   With cache_length  7 :    1.988, maxdiff = 0.0000 %
+                  Cache speed up : 71.997 %
+   With cache_length  8 :    2.005, maxdiff = 0.0000 %
+                  Cache speed up : 70.530 %
+   With cache_length  9 :    2.068, maxdiff = 0.0000 %
+                  Cache speed up : 65.337 %
+
+------------------------------------------------------------
+
+gcc-7 O3
+
+Fixed input tests
+Without cache :   57.091, maxdiff 0.0000 %
+   With cache :   13.743, maxdiff = 0.0000 %
+Cache speed up : 315.422 %
+
+Random input tests
+Without cache :  109.624, maxdiff 0.0001 %
+   With cache :  121.301, maxdiff = 0.0001 %
+Cache speed up : -10.6515 %
+Spun input (n=5) tests 
+   With cache_length  0 :    6.274, maxdiff = 0.0000 %
+                  Cache speed up : 0.000 %
+   With cache_length  1 :    7.157, maxdiff = 0.0000 %
+                  Cache speed up : -14.089 %
+   With cache_length  2 :    9.137, maxdiff = 0.0000 %
+                  Cache speed up : -45.643 %
+   With cache_length  3 :    8.452, maxdiff = 0.0000 %
+                  Cache speed up : -34.718 %
+   With cache_length  4 :    7.792, maxdiff = 0.0000 %
+                  Cache speed up : -24.205 %
+   With cache_length  5 :    2.263, maxdiff = 0.0000 %
+                  Cache speed up : 177.264 %
+   With cache_length  6 :    2.261, maxdiff = 0.0000 %
+                  Cache speed up : 177.447 %
+   With cache_length  7 :    2.268, maxdiff = 0.0000 %
+                  Cache speed up : 176.603 %
+   With cache_length  8 :    2.312, maxdiff = 0.0000 %
+                  Cache speed up : 171.380 %
+   With cache_length  9 :    2.397, maxdiff = 0.0000 %
+                  Cache speed up : 161.740 %
+
+
+
+------------------------------------------------------------
+
+gcc-7 O2
+
+Fixed input tests
+Without cache :   55.646, maxdiff 0.0000 %
+   With cache :   18.802, maxdiff = 0.0000 %
+Cache speed up : 195.965 %
+
+Random input tests
+Without cache :  105.036, maxdiff 0.0001 %
+   With cache :  114.886, maxdiff = 0.0001 %
+Cache speed up : -9.3774 %
+Spun input (n=5) tests 
+   With cache_length  0 :    5.989, maxdiff = 0.0000 %
+                  Cache speed up : 0.000 %
+   With cache_length  1 :    6.856, maxdiff = 0.0000 %
+                  Cache speed up : -14.488 %
+   With cache_length  2 :    7.013, maxdiff = 0.0000 %
+                  Cache speed up : -17.113 %
+   With cache_length  3 :    7.124, maxdiff = 0.0000 %
+                  Cache speed up : -18.957 %
+   With cache_length  4 :    7.221, maxdiff = 0.0000 %
+                  Cache speed up : -20.576 %
+   With cache_length  5 :    2.241, maxdiff = 0.0000 %
+                  Cache speed up : 167.250 %
+   With cache_length  6 :    2.258, maxdiff = 0.0000 %
+                  Cache speed up : 165.269 %
+   With cache_length  7 :    2.297, maxdiff = 0.0000 %
+                  Cache speed up : 160.664 %
+   With cache_length  8 :    2.344, maxdiff = 0.0000 %
+                  Cache speed up : 155.445 %
+   With cache_length  9 :    2.399, maxdiff = 0.0000 %
+                  Cache speed up : 149.615 %
+

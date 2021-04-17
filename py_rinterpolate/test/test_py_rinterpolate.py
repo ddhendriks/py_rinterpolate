@@ -1,4 +1,3 @@
-# import _py_rinterpolate
 from py_rinterpolate import Rinterpolate
 
 INPUT_TABLE = [[1, 2, 3], [4, 5, 6]]
@@ -100,6 +99,6 @@ def test_interpolate_compare_with_perl():
 
 # print(arr)
 if __name__ == "__main__":
-    test_flatten()
+    # test_flatten()
     test_destroy()
-    test_interpolate_compare_with_perl()
+    # test_interpolate_compare_with_perl()
