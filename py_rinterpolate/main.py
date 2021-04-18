@@ -34,14 +34,14 @@ class Rinterpolate(object):
         nparams=-1,
         ndata=-1,
         usecache=0,
-        _dataspace=None,
+        _dataspace=None, 
         _localcache=None,
         **kwargs
     ):
         self.nparams = nparams  # Amount of parameters contained in the table
         self.ndata = ndata  # Amount of datapoints contained in a table row
         self.usecache = usecache  # Whether to use cache
-        self._dataspace = _dataspace  # Dataspace memory adress
+        self._dataspace = _dataspace  # Dataspace memory capsule
 
         # Handle table. self.table holds the table, which upon input gets flattened. See module description
         if not table:
@@ -52,7 +52,7 @@ class Rinterpolate(object):
         # Handle localcache
         if not _localcache:  # Holds information about the cached table
             self._localcache = {
-                "C_table": 0,  # Holds the memory adress of the C_table
+                "C_table": None,  # Holds the memory adress of the C_table
                 "C_size": -1,  # Holds the size (amount of entries) of the C_table
             }
         else:
@@ -67,10 +67,10 @@ class Rinterpolate(object):
             self._dataspace = (
                 _py_rinterpolate._rinterpolate_alloc_dataspace_wrapper()
             )  # API call
-            # print('self._dataspace: {}'.format(self._dataspace))
+            print('self._dataspace: {}'.format(self._dataspace))
 
         # Check whether that was succesful
-        if (not self._dataspace) or (self._dataspace == 0):
+        if not self._dataspace:
             print("Could not allocate memory for rinterpolate")
             raise ValueError
 
@@ -110,18 +110,17 @@ class Rinterpolate(object):
 
         # Free the dataspace by passing the dataspace memory location to the freeing function
         if self._dataspace:
-            if self._dataspace != 0:
-                # print("freeing self._dataspace: {}".format(self._dataspace))
-                _py_rinterpolate._rinterpolate_free_dataspace_wrapper(
-                    self._dataspace
-                )  # API call
+            print("freeing self._dataspace: {}".format(self._dataspace))
+            _py_rinterpolate._rinterpolate_free_dataspace_wrapper(
+                self._dataspace
+            )  # API call
 
         # Free the C_table by passing the memory location to the free-ing function
         if self._localcache["C_table"]:
-            if self._localcache["C_table"] != 0:
-                _py_rinterpolate._rinterpolate_free_C_table(
-                    self._localcache["C_table"]
-                )  # API call
+            print("freeing self._localcache['C_table']: {}".format(self._localcache["C_table"]))
+            _py_rinterpolate._rinterpolate_free_C_table(
+                self._localcache["C_table"]
+            )  # API call
 
     def DESTROY(self):
         """
@@ -136,9 +135,9 @@ class Rinterpolate(object):
         """
 
         # Remove it if it exists
-        if self._localcache["C_table"] != 0:
+        if self._localcache["C_table"]:
             # rinterpolate_free_C_table(self._localcache['C_table']) # API call
-            self._localcache["C_table"] = 0
+            self._localcache["C_table"] = None
             self._localcache["C_size"] = 1
 
     def return_ndata(self, input_val=None):
@@ -248,13 +247,14 @@ class Rinterpolate(object):
         nlines = self.return_nlines()
         nl = self.ndata + self.nparams  #
 
-        # Set the values
+        # Set the values TODO: Make use of vectorized calculations here. 
         for i in range(nlines):
             self._table[i * nl + column] *= factor
 
     def set_table(self, new_table):
         """
-        Sets new table data and flattens it. Both a normal list and a numpy array of floats is accepted. 
+        Sets new table data and flattens it. 
+        Both a normal list and a numpy array of floats is accepted. 
 
         Rebuilding the cache gets done at interpolate
         """
@@ -325,17 +325,17 @@ class Rinterpolate(object):
 
         ## check if an existing table requires an update.
         # If it doesnt match what we expect, then set it to 0
-        if (not localcache["C_table"] == 0) and (not localcache["C_size"] == n):
+        if (not localcache["C_table"] == None) and (not localcache["C_size"] == n):
             print("Freeying the table")
             _py_rinterpolate._rinterpolate_free_C_table(localcache["C_table"])
 
-            localcache["C_table"] = 0
+            localcache["C_table"] = None
             localcache["C_size"] = -1
 
         # set up C copy of the table if we haven't
         # one already (or just freed it above)
-        if localcache["C_table"] == 0:
-            # print("Set table {}, nparams={}, ndata={}\n".format(self.table, self.nparams, self.ndata))
+        if localcache["C_table"] == None:
+            print("Set table {}, nparams={}, ndata={}\n".format(self._table, self.nparams, self.ndata))
             localcache["C_table"] = _py_rinterpolate._rinterpolate_set_C_table(
                 self._table, self.nparams, self.ndata, nlines
             )
