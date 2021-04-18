@@ -91,46 +91,20 @@ PyMODINIT_FUNC PyInit__py_rinterpolate(void)
 /* Function to allocate dataspace for the rinterpolate. Returns 0 on error */
 static PyObject* rinterpolate_alloc_dataspace_wrapper(PyObject *self, PyObject *args)
 {
-    /*  */
-
-    // int x;
-
-    // /* Parse the input tuple */
-    // if(!PyArg_ParseTuple(args, "i", &x))
-    //     return NULL;
-
     struct rinterpolate_data_t * rinterpolate_data = NULL;
     rinterpolate_counter_t status MAYBE_UNUSED = rinterpolate_alloc_dataspace(&rinterpolate_data);
-    debug_printf("rinterpolate_alloc_dataspace_wrapper: Status of allocation: %d\n", status);
+    debug_printf("rinterpolate_alloc_dataspace_wrapper: Status of allocation: %u\n", status);
 
     if (status!=0){
         PyErr_SetString(PyExc_ValueError, "rinterpolate_alloc_dataspace_wrapper: Allocation of dataspace unsuccesful");
         return NULL;        
     }
 
-    // Transform the pointer to an unsigned_int pointer.
-    uintptr_t rinterpolate_data_memaddr_int = (uintptr_t)rinterpolate_data;
-    debug_printf("rinterpolate_alloc_dataspace_wrapper: rinterpolate_data is at address: %p rinterpolate_data_memaddr_int: %ld\n", (void*)&rinterpolate_data, rinterpolate_data_memaddr_int);
+    debug_printf("Packing up dataspace pointer %p into capsule\n", (void *)rinterpolate_data);
+    PyObject * dataspace_mem_capsule = PyCapsule_New(rinterpolate_data, "TABLE", NULL);
 
-    return Py_BuildValue("l", rinterpolate_data_memaddr_int);
+    return dataspace_mem_capsule;
 }
-
-// /* free dataspace */
-// void rinterpolate_free_dataspace_wrapper(SV * dataspace)
-// {
-//     struct rinterpolate_data_t * rinterpolate_data
-//         = Perl_var_to_C_pointer(dataspace,struct rinterpolate_data_t *);
-//     if(rinterpolate_data != NULL)
-//     {
-//         //printf("table free rinterpolate_data1 %p\n",rinterpolate_data);
-//         rinterpolate_free_data(rinterpolate_data);
-//         if(rinterpolate_data != NULL)
-//         {
-//             //printf("table free rinterpolate_data2 %p\n",rinterpolate_data);
-//             free(rinterpolate_data);
-//         }
-//     }
-// }
 
 /* 
  * Function to free the memory allocated for the dataspace. 
@@ -138,44 +112,34 @@ static PyObject* rinterpolate_alloc_dataspace_wrapper(PyObject *self, PyObject *
  */
 static PyObject* rinterpolate_free_dataspace_wrapper(PyObject *self, PyObject *args)
 {
-    long int dataspace_memaddr = -1;
+    PyObject *  dataspace_mem_capsule = NULL;
 
     /* Parse the input tuple */
-    if(!PyArg_ParseTuple(args, "l", &dataspace_memaddr))
+    if(!PyArg_ParseTuple(args, "O", &dataspace_mem_capsule))
+    {
         return NULL;
+    }
 
-    // cast the dataspace_memaddr integer back to the real memory adress
-    struct rinterpolate_data_t * rinterpolate_data = (struct rinterpolate_data_t *)dataspace_memaddr;
-    debug_printf("rinterpolate_free_dataspace_wrapper: Took long int memaddr %ld and loaded it to %p\n", dataspace_memaddr, (void*)&rinterpolate_data);
+    /* Unpack the capsules */
+    struct rinterpolate_data_t * rinterpolate_data = NULL;
+    if (dataspace_mem_capsule != NULL)
+    {
+        if (PyCapsule_IsValid(dataspace_mem_capsule, "DATASPACE"))
+        {
+            if (!(rinterpolate_data = (struct rinterpolate_data_t *) PyCapsule_GetPointer(dataspace_mem_capsule, "DATASPACE")))
+                return NULL;   
+            debug_printf("Unpacked dataspace pointer %p from capsule\n", (void *)rinterpolate_data);                
+        }
+    }
 
-    // TODO: ask rob how the freeing goes here.
     if(rinterpolate_data != NULL)
     {
-        debug_printf("rinterpolate_free_dataspace_wrapper: dataspace free rinterpolate_data 1 (free via rinterpolate_free_data) %p\n", rinterpolate_data);
+        debug_printf("rinterpolate_free_dataspace_wrapper: dataspace free rinterpolate_data 1 (free via rinterpolate_free_data) %p\n", (void *)rinterpolate_data);
         rinterpolate_free_data(rinterpolate_data);
-        // free(rinterpolate_data);
-
-        // if(rinterpolate_data != NULL)
-        // {
-        //     debug_printf("rinterpolate_free_dataspace_wrapper: dataspace free rinterpolate_data 2 (regular free) %p\n", rinterpolate_data);
-        //     free(rinterpolate_data);
-        // }
     }
 
     Py_RETURN_NONE;
 }
-
-
-// void rinterpolate_free_C_table(SV * C_table)
-// {
-//     double * table = Perl_var_to_C_pointer(C_table,double*);
-//     if(table != NULL)
-//     {
-//         //printf("free table %p\n",table);
-//         free(table);
-//         table = NULL;
-//     }
-// }
 
 /* 
  * Function to free the memory allocated for the C_table. 
@@ -183,20 +147,30 @@ static PyObject* rinterpolate_free_dataspace_wrapper(PyObject *self, PyObject *a
  */
 static PyObject* rinterpolate_free_C_table(PyObject *self, PyObject *args)
 {
-    long int C_table = -1;
+    PyObject *  C_table_capsule = NULL;
 
     /* Parse the input tuple */
-    if(!PyArg_ParseTuple(args, "l", &C_table))
+    if(!PyArg_ParseTuple(args, "O", &C_table_capsule))
+    {
         return NULL;
+    }
 
-    // Convert to real real pointer again
-    double * table = (void*)C_table;
-    debug_printf("rinterpolate_free_C_table: Took long int memaddr %ld and loaded it to %p\n", C_table, (void *)&table);
+    /* Unpack the capsules */
+    double * table = NULL;
+    if (C_table_capsule != NULL)
+    {
+        if (PyCapsule_IsValid(C_table_capsule, "TABLE"))
+        {
+            if (!(table = (double *) PyCapsule_GetPointer(C_table_capsule, "TABLE")))
+                return NULL;   
+            debug_printf("Unpacked table pointer %p from capsule\n", (void *)table);
+        }
+    }
 
     // TODO: mention to rob that this freeing doesnt `unset` the values in the table. 
     if(table != NULL)
     {
-        debug_printf("rinterpolate_free_C_table: free table %p\n",table);
+        debug_printf("rinterpolate_free_C_table: free table %p\n", (void *)table);
         free(table); // TODO: as rob if this works. 
         table = NULL;
     }
@@ -209,18 +183,25 @@ static PyObject* rinterpolate_free_C_table(PyObject *self, PyObject *args)
  */
 static PyObject* rinterpolate_check_C_table(PyObject *self, PyObject *args)
 {
-     /* Function to free the memory allocated for the C_table. takes a long int as input that represents the memory adress stored as an int*/
-    long int C_table = -1;
+    /* Function to free the memory allocated for the C_table. takes a long int as input that represents the memory adress stored as an int*/
+    PyObject *  C_table_capsule = NULL;
     int C_size = -1;
 
     /* Parse the input tuple */
-    if(!PyArg_ParseTuple(args, "li", &C_table, &C_size))
+    if(!PyArg_ParseTuple(args, "Oi", &C_table_capsule, &C_size))
         return NULL;
 
-    // Convert to real real pointer again
-    double * table = (double*)C_table;
-
-    debug_printf("rinterpolate_check_C_table: Took long int memaddr %ld and loaded it to %p\n", C_table, (void *)&table);
+    /* Unpack the capsules */
+    double * table = NULL;
+    if (C_table_capsule != NULL)
+    {
+        if (PyCapsule_IsValid(C_table_capsule, "TABLE"))
+        {
+            if (!(table = (double *) PyCapsule_GetPointer(C_table_capsule, "TABLE")))
+                return NULL;   
+            debug_printf("Unpacked table pointer %p from capsule\n", (void *)table);                
+        }
+    }
 
     int i;
     if(table != NULL)
@@ -242,8 +223,8 @@ static PyObject* rinterpolate_check_C_table(PyObject *self, PyObject *args)
  */
 static PyObject* rinterpolate_wrapper(PyObject *self, PyObject *args)
 {
-    long int C_table = -1;
-    long int dataspace = -1;
+    PyObject *  C_table_capsule = NULL;
+    PyObject *  dataspace_mem_capsule = NULL;
     int nparams = -1;
     int ndata = -1;
     int nlines = -1;
@@ -255,8 +236,31 @@ static PyObject* rinterpolate_wrapper(PyObject *self, PyObject *args)
     PyObject* num;
 
     /* Parse the input tuple */
-    if(!PyArg_ParseTuple(args, "lliiiO!i", &C_table, &dataspace, &nparams, &ndata, &nlines, &PyList_Type, &xList, &usecache))
+    if(!PyArg_ParseTuple(args, "OOiiiO!i", &C_table_capsule, &dataspace_mem_capsule, &nparams, &ndata, &nlines, &PyList_Type, &xList, &usecache))
         return NULL;
+
+    /* Unpack the capsules */
+    double * table = NULL;
+    if (C_table_capsule != NULL)
+    {
+        if (PyCapsule_IsValid(C_table_capsule, "TABLE"))
+        {
+            if (!(table = (double *) PyCapsule_GetPointer(C_table_capsule, "TABLE")))
+                return NULL;   
+            debug_printf("Unpacked table pointer %p from capsule\n", (void *)table);                
+        }
+    }
+
+    struct rinterpolate_data_t * rinterpolate_data = NULL;
+    if (dataspace_mem_capsule != NULL)
+    {
+        if (PyCapsule_IsValid(dataspace_mem_capsule, "DATASPACE"))
+        {
+            if (!(rinterpolate_data = (struct rinterpolate_data_t *) PyCapsule_GetPointer(dataspace_mem_capsule, "DATASPACE")))
+                return NULL;   
+            debug_printf("Unpacked dataspace pointer %p from capsule\n", (void *)rinterpolate_data);                
+        }
+    }
 
     /*
      * Allocate memory for the input array, x, and return array, r
@@ -265,17 +269,6 @@ static PyObject* rinterpolate_wrapper(PyObject *self, PyObject *args)
     if(x == NULL) Py_RETURN_NONE;
     double * r = malloc(sizeof(double) * ndata);
     if(r == NULL) Py_RETURN_NONE; // TODO: ask rob about the purpose of the return. should make it a return None probably
-
-
-    /*
-     * Get the table from Perl->C pointer conversion
-     */
-    double * table = (double *)C_table;
-
-    /*
-     * Get the interpolate_data struct pointer
-     */
-    struct rinterpolate_data_t * rinterpolate_data = (struct rinterpolate_data_t *)dataspace;
 
     // Fill the C-array with the python input
     for(i=0; i<nparams; i++)
@@ -331,7 +324,7 @@ static PyObject* rinterpolate_wrapper(PyObject *self, PyObject *args)
     free(r);
 
     // return stuff
-    PyObject *Result = Py_BuildValue("O",rList);
+    PyObject *Result = Py_BuildValue("O", rList);
     Py_DECREF(rList);
     return Result;
 }
@@ -344,7 +337,6 @@ static PyObject* rinterpolate_wrapper(PyObject *self, PyObject *args)
  */
 static PyObject* rinterpolate_set_C_table(PyObject *self, PyObject *args)
 {
-
     PyObject *pList;
     PyObject *pItem;
     Py_ssize_t n_check;
@@ -404,7 +396,8 @@ static PyObject* rinterpolate_set_C_table(PyObject *self, PyObject *args)
         return NULL;
     }
 
-    // return the pointer to the table. 
-    uintptr_t C_table_memaddr_int = (uintptr_t)table;
-    return Py_BuildValue("l", C_table_memaddr_int);
+    debug_printf("Packing up table pointer %p into capsule\n", (void *)table);
+    PyObject * C_table_capsule = PyCapsule_New(table, "TABLE", NULL);
+
+    return C_table_capsule;
 }

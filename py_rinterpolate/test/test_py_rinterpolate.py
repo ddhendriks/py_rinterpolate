@@ -1,75 +1,106 @@
 from py_rinterpolate import Rinterpolate
-
-INPUT_TABLE = [[1, 2, 3], [4, 5, 6]]
-NPARAMS = 2
-NDATA = 1
+import test_data
 
 
-def test_flatten():
+import unittest
+
+
+
+
+class TestClass(unittest.TestCase):
     """
-    Unit test for flattening the table
-    """
+    Unittest class
 
-    # Create the object
-    rinterpolator = Rinterpolate()
-
-    # Check if flattening works
-    flattened_table = rinterpolator._flatten(INPUT_TABLE)
-
-    assert flattened_table == [1, 2, 3, 4, 5, 6], "Flattening not working   "
-
-
-def test_destroy():
-    """
-    Unit test to test the destroy function
+    # https://stackoverflow.com/questions/17353213/init-for-unittest-testcase
     """
 
-    # Create the object
-    rinterpolator = Rinterpolate()
+    def __init__(self, *args, **kwargs):
+        """
+        init
+        """
+        super(TestClass, self).__init__(*args, **kwargs)
 
-    # Destroy the object
-    rinterpolator.destroy()
-
-    print(rinterpolator._localcache["C_table"])
-    print(rinterpolator._dataspace)
+        self.INPUT_TABLE = [[1, 2, 3], [4, 5, 6]]
+        self.NPARAMS = 2
+        self.NDATA = 1
 
 
-def test_interpolate_compare_with_perl():
-    """
-    Unit test that compares the interpolation results with perl
-    """
+    def test_flatten(self):
+        """
+        Unit test for flattening the table
+        """
 
-    import test_data
+        # Create the object
+        rinterpolator = Rinterpolate()
 
-    test_result_filename = "test_results.txt"
-    with open(test_result_filename, "r") as f:
-        test_results = f.readlines()
+        # Check if flattening works
+        flattened_table = rinterpolator._flatten(self.INPUT_TABLE)
 
-    test_data_table = test_data.test_table
-    test_data_input_list = test_data.test_coeffs
+        assert flattened_table == [1, 2, 3, 4, 5, 6], "Flattening not working   "
 
-    test_data_nparams = 3
-    test_data_ndata = 10
 
-    #
-    rinterpolator = Rinterpolate(test_data_table, test_data_nparams, test_data_ndata)
+    def test_destroy(self):
+        """
+        Unit test to test the destroy function
+        """
 
-    input_list = [float(el) for el in test_data_input_list[0]]
-    result_local = rinterpolator.interpolate([float(el) for el in input_list])
+        # Create the object
+        rinterpolator = Rinterpolate()
 
-    first_test_result = [float(el) for el in test_results[1].split()][3:]
+        # Destroy the object
+        rinterpolator.destroy()
 
-    diff_list = [el1 - el2 for (el1, el2) in zip(first_test_result, result_local)]
-    print("test_interpolate_compare_with_perl:")
-    print("\tInterpolating table")
-    print("\tusing coefficients:\n\t\t{}".format(input_list))
-    print(
-        "\tlocal output:\n\t\t{}".format(["{:.6f}".format(el) for el in result_local])
-    )
-    print("\tComparison output:\n\t\t{}".format(first_test_result))
-    print("\tmax diff: {}".format(max(diff_list)))
+        print(rinterpolator._localcache["C_table"])
+        print(rinterpolator._dataspace)
 
-    assert max(diff_list) < 1e-5, "Difference is too big"
+
+    def test_interpolate_compare_with_perl(self):
+        """
+        Unit test that compares the interpolation results with perl
+        """
+
+        test_result_filename = "test_results.txt"
+        with open(test_result_filename, "r") as f:
+            test_results = f.readlines()
+
+        print("Loaded table with test data")
+
+        test_data_table = test_data.test_table
+        test_data_input_list = test_data.test_coeffs
+
+        # print(test_data_table)
+        print(test_data_input_list)
+
+        test_data_nparams = 3
+        test_data_ndata = 10
+
+        quit()
+
+        #
+        rinterpolator = Rinterpolate(
+            table=test_data_table,        # Contains the table of data 
+            nparams=test_data_nparams,    # The amount of parameters in the table 
+            ndata=test_data_ndata         # The amount of datapoints (the parameters that we want to interpolate)
+        )
+        print("Set up interpolator")
+
+        input_list = [float(el) for el in test_data_input_list[0]]
+        result_local = rinterpolator.interpolate([float(el) for el in input_list])
+
+        first_test_result = [float(el) for el in test_results[1].split()][3:]
+
+        diff_list = [el1 - el2 for (el1, el2) in zip(first_test_result, result_local)]
+
+        print("test_interpolate_compare_with_perl:")
+        print("\tInterpolating table")
+        print("\tusing coefficients:\n\t\t{}".format(input_list))
+        print(
+            "\tlocal output:\n\t\t{}".format(["{:.6f}".format(el) for el in result_local])
+        )
+        print("\tComparison output:\n\t\t{}".format(first_test_result))
+        print("\tmax diff: {}".format(max(diff_list)))
+
+        assert max(diff_list) < 1e-5, "Difference is too big"
 
 
 # rinterpolator = Rinterpolate()
@@ -99,6 +130,5 @@ def test_interpolate_compare_with_perl():
 
 # print(arr)
 if __name__ == "__main__":
-    # test_flatten()
-    test_destroy()
-    # test_interpolate_compare_with_perl()
+    unittest.main()
+
