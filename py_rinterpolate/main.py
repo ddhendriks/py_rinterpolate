@@ -6,6 +6,7 @@ imports the API functions as underscores and keeps them _private_
 contains the main class for the interpolator
 
 TODO: use numpy to improve the array mutations
+TODO: add verbosity to the init
 
 example of input table:
 
@@ -19,6 +20,8 @@ For a good description of the requirements and workings of the rinterpolate, see
 import numpy as np
 
 from py_rinterpolate import _py_rinterpolate  # Import the c-module
+
+
 
 
 class Rinterpolate(object):
@@ -67,7 +70,7 @@ class Rinterpolate(object):
             self._dataspace = (
                 _py_rinterpolate._rinterpolate_alloc_dataspace_wrapper()
             )  # API call
-            print('self._dataspace: {}'.format(self._dataspace))
+            # print('self._dataspace: {}'.format(self._dataspace))
 
         # Check whether that was succesful
         if not self._dataspace:
@@ -110,14 +113,14 @@ class Rinterpolate(object):
 
         # Free the dataspace by passing the dataspace memory location to the freeing function
         if self._dataspace:
-            print("freeing self._dataspace: {}".format(self._dataspace))
+            # print("freeing self._dataspace: {}".format(self._dataspace))
             _py_rinterpolate._rinterpolate_free_dataspace_wrapper(
                 self._dataspace
             )  # API call
 
         # Free the C_table by passing the memory location to the free-ing function
         if self._localcache["C_table"]:
-            print("freeing self._localcache['C_table']: {}".format(self._localcache["C_table"]))
+            # print("freeing self._localcache['C_table']: {}".format(self._localcache["C_table"]))
             _py_rinterpolate._rinterpolate_free_C_table(
                 self._localcache["C_table"]
             )  # API call

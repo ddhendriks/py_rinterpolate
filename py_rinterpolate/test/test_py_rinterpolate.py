@@ -68,13 +68,8 @@ class TestClass(unittest.TestCase):
         test_data_table = test_data.test_table
         test_data_input_list = test_data.test_coeffs
 
-        # print(test_data_table)
-        print(test_data_input_list)
-
         test_data_nparams = 3
         test_data_ndata = 10
-
-        quit()
 
         #
         rinterpolator = Rinterpolate(

@@ -58,7 +58,7 @@ PY_RINTERPOLATE_MODULE = Extension(
         "-Wformat",
         "-D__RINTERPOLATE_BUILD_BUILD_FLAGS__ ",
     ],
-    define_macros=[("DEBUG", None)],
+    #define_macros=[("DEBUG", None)],
 )
 
 setup(
