@@ -277,6 +277,12 @@ class Rinterpolate(object):
         """
         Yield items from any nested iterable; see https://stackoverflow.com/a/40857703
 
+        This will flatten a nested list in the following way:
+
+        [[a0, b0, c0], [a1, b1, c1], [a2, b2, c2]]
+
+        becomes: [a0, b0, c0, a1, b1, c1, a2, b2, c2]
+
         TODO: ask rob what to expect at all from the structure of the things. 
         """
 
