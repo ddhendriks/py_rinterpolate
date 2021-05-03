@@ -136,6 +136,7 @@ static PyObject* rinterpolate_free_dataspace_wrapper(PyObject *self, PyObject *a
     {
         debug_printf("rinterpolate_free_dataspace_wrapper: dataspace free rinterpolate_data 1 (free via rinterpolate_free_data) %p\n", (void *)rinterpolate_data);
         rinterpolate_free_data(rinterpolate_data);
+        // TODO: Consider putting the extra free here. With valgrind on a normal c script where I interpolate on a table it needs to be there. 
     }
 
     Py_RETURN_NONE;
