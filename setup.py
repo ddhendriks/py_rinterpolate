@@ -31,6 +31,7 @@ def license():
 # Find all the files of the rinterpolate and add them to the sources
 librinterpolate_src_path = "src/librinterpolate/src"
 
+
 path_contents = os.listdir(librinterpolate_src_path)
 
 c_files = [
@@ -38,12 +39,22 @@ c_files = [
     for file in path_contents
     if file.endswith(".c")
 ]
+
+h_files = [
+    os.path.join(librinterpolate_src_path, file)
+    for file in path_contents
+    if file.endswith(".h")
+]
+
 SOURCES = ["src/py_rinterpolate_interface.c"] + c_files
+HEADERS_FILES = h_files
+
 
 PY_RINTERPOLATE_MODULE = Extension(
     name="py_rinterpolate._py_rinterpolate",
     sources=SOURCES,
-    include_dirs=["/usr/local/include", "src/", librinterpolate_src_path,],
+    # headers=HEADERS_FILES,
+    include_dirs=[librinterpolate_src_path, os.path.join(os.getcwd(), librinterpolate_src_path)],
     extra_compile_args=[
         "-O3",
         "-Wpedantic",
@@ -58,12 +69,12 @@ PY_RINTERPOLATE_MODULE = Extension(
         "-Wformat",
         "-D__RINTERPOLATE_BUILD_BUILD_FLAGS__ ",
     ],
-    #define_macros=[("DEBUG", None)],
+    define_macros=[("DEBUG", None)],
 )
 
-setup(
+setup(headers=HEADERS_FILES,
     name="py_rinterpolate",
-    version="0.12",
+    version="0.12.1",
     description="Python wrapper for the linear interpolation libryary rinterpolate (https://gitlab.eps.surrey.ac.uk/ri0005/librinterpolate)",
     author="David Hendriks, Robert Izzard",
     author_email="davidhendriks93@gmail.com",
