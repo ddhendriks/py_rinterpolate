@@ -21,9 +21,6 @@ import numpy as np
 
 from py_rinterpolate import _py_rinterpolate  # Import the c-module
 
-
-
-
 class Rinterpolate(object):
     """
     Class to interpolate on parameters given a certain input table. 
