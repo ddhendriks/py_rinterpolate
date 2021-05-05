@@ -31,7 +31,6 @@ def license():
 # Find all the files of the rinterpolate and add them to the sources
 librinterpolate_src_path = "src/librinterpolate/src"
 
-
 path_contents = os.listdir(librinterpolate_src_path)
 
 c_files = [
@@ -49,12 +48,10 @@ h_files = [
 SOURCES = ["src/py_rinterpolate_interface.c"] + c_files
 HEADERS_FILES = h_files
 
-
 PY_RINTERPOLATE_MODULE = Extension(
     name="py_rinterpolate._py_rinterpolate",
     sources=SOURCES,
-    # headers=HEADERS_FILES,
-    include_dirs=[librinterpolate_src_path, os.path.join(os.getcwd(), librinterpolate_src_path)],
+    include_dirs=[librinterpolate_src_path],
     extra_compile_args=[
         "-O3",
         "-Wpedantic",

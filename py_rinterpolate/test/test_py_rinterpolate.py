@@ -1,11 +1,9 @@
-from py_rinterpolate import Rinterpolate
-import test_data
-
-
 import unittest
+import numpy as np
 
+from py_rinterpolate import Rinterpolate
 
-
+import test_data
 
 class TestClass(unittest.TestCase):
     """
@@ -53,7 +51,6 @@ class TestClass(unittest.TestCase):
         print(rinterpolator._localcache["C_table"])
         print(rinterpolator._dataspace)
 
-
     def test_interpolate_compare_with_perl(self):
         """
         Unit test that compares the interpolation results with perl
@@ -97,6 +94,28 @@ class TestClass(unittest.TestCase):
 
         assert max(diff_list) < 1e-5, "Difference is too big"
 
+    def test_multiply_table_column(self):
+        """
+        Unit test to see if the multiply column works
+        """
+
+        # # Create the object
+        # rinterpolator = Rinterpolate()
+
+        # # Check if flattening works
+
+        # Create the object
+        rinterpolator = Rinterpolate(
+            table=self.INPUT_TABLE,              # Contains the table of data 
+            nparams=self.NPARAMS,    # The amount of parameters in the table 
+            ndata=self.NDATA         # The amount of datapoints (the parameters that we want to interpolate)
+        )
+
+        rinterpolator.multiply_table_column(1, 2)
+        compare_table = np.array([[1,2,3], [4,5,6]]) * [1,2,1]
+        flattened_compare_table = rinterpolator._flatten(compare_table)
+
+        assert rinterpolator._table == list(flattened_compare_table)
 
 # rinterpolator = Rinterpolate()
 # # rinterpolator.interpolate([1,2])
