@@ -45,6 +45,7 @@ class Rinterpolate(object):
         self.ndata = ndata  # Amount of datapoints contained in a table row
         self.usecache = usecache  # Whether to use cache
         self._dataspace = _dataspace  # Dataspace memory capsule
+        self.nlines = None # Set to empty now. 
 
         # Handle table. self.table holds the table, which upon input gets flattened. See module description
         if not table:
