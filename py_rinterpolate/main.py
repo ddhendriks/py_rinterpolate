@@ -342,7 +342,7 @@ class Rinterpolate(object):
         # set up C copy of the table if we haven't
         # one already (or just freed it above)
         if localcache["C_table"] == None:
-            print("Set table {}, nparams={}, ndata={}\n".format(self._table, self.nparams, self.ndata))
+            # print("Set table {}, nparams={}, ndata={}\n".format(self._table, self.nparams, self.ndata))
             localcache["C_table"] = _py_rinterpolate._rinterpolate_set_C_table(
                 self._table, self.nparams, self.ndata, nlines
             )
