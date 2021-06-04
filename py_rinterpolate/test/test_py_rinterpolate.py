@@ -5,6 +5,7 @@ from py_rinterpolate import Rinterpolate
 
 import test_data
 
+
 class TestClass(unittest.TestCase):
     """
     Unittest class
@@ -22,7 +23,6 @@ class TestClass(unittest.TestCase):
         self.NPARAMS = 2
         self.NDATA = 1
 
-
     def test_flatten(self):
         """
         Unit test for flattening the table
@@ -34,8 +34,10 @@ class TestClass(unittest.TestCase):
         # Check if flattening works
         flattened_table = rinterpolator._flatten(self.INPUT_TABLE)
 
-        assert flattened_table == [1, 2, 3, 4, 5, 6], "Flattening not working   "
+        # Destroy the object
+        rinterpolator.destroy()
 
+        assert flattened_table == [1, 2, 3, 4, 5, 6], "Flattening not working   "
 
     def test_destroy(self):
         """
@@ -45,11 +47,16 @@ class TestClass(unittest.TestCase):
         # Create the object
         rinterpolator = Rinterpolate()
 
+        print('Testing {} rinterpolator._localcache["C_table"]: {}'.format(rinterpolator, rinterpolator._localcache["C_table"]))
+        print('Testing {} rinterpolator._dataspace: {}'.format(rinterpolator, rinterpolator._dataspace))
+
+
         # Destroy the object
         rinterpolator.destroy()
 
-        print(rinterpolator._localcache["C_table"])
-        print(rinterpolator._dataspace)
+        print('Testing {} rinterpolator._localcache["C_table"]: {}'.format(rinterpolator, rinterpolator._localcache["C_table"]))
+        print('Testing {} rinterpolator._dataspace: {}'.format(rinterpolator, rinterpolator._dataspace))
+
 
     def test_interpolate_compare_with_perl(self):
         """
@@ -70,9 +77,9 @@ class TestClass(unittest.TestCase):
 
         #
         rinterpolator = Rinterpolate(
-            table=test_data_table,        # Contains the table of data 
-            nparams=test_data_nparams,    # The amount of parameters in the table 
-            ndata=test_data_ndata         # The amount of datapoints (the parameters that we want to interpolate)
+            table=test_data_table,  # Contains the table of data
+            nparams=test_data_nparams,  # The amount of parameters in the table
+            ndata=test_data_ndata,  # The amount of datapoints (the parameters that we want to interpolate)
         )
         print("Set up interpolator")
 
@@ -87,10 +94,15 @@ class TestClass(unittest.TestCase):
         print("\tInterpolating table")
         print("\tusing coefficients:\n\t\t{}".format(input_list))
         print(
-            "\tlocal output:\n\t\t{}".format(["{:.6f}".format(el) for el in result_local])
+            "\tlocal output:\n\t\t{}".format(
+                ["{:.6f}".format(el) for el in result_local]
+            )
         )
         print("\tComparison output:\n\t\t{}".format(first_test_result))
         print("\tmax diff: {}".format(max(diff_list)))
+
+        # Destroy the object
+        rinterpolator.destroy()
 
         assert max(diff_list) < 1e-5, "Difference is too big"
 
@@ -106,43 +118,19 @@ class TestClass(unittest.TestCase):
 
         # Create the object
         rinterpolator = Rinterpolate(
-            table=self.INPUT_TABLE,              # Contains the table of data 
-            nparams=self.NPARAMS,    # The amount of parameters in the table 
-            ndata=self.NDATA         # The amount of datapoints (the parameters that we want to interpolate)
+            table=self.INPUT_TABLE,  # Contains the table of data
+            nparams=self.NPARAMS,  # The amount of parameters in the table
+            ndata=self.NDATA,  # The amount of datapoints (the parameters that we want to interpolate)
         )
 
         rinterpolator.multiply_table_column(1, 2)
-        compare_table = np.array([[1,2,3], [4,5,6]]) * [1,2,1]
+        compare_table = np.array([[1, 2, 3], [4, 5, 6]]) * [1, 2, 1]
         flattened_compare_table = rinterpolator._flatten(compare_table)
+
+        # Destroy the object
+        rinterpolator.destroy()
 
         assert rinterpolator._table == list(flattened_compare_table)
 
-# rinterpolator = Rinterpolate()
-# # rinterpolator.interpolate([1,2])
-
-# # C-code
-# # Set C_table
-# array = [200000000000000.0,2.0,3.0,4.0,5.0,6.0]
-# C_table = _py_rinterpolate._rinterpolate_set_C_table(array, 1, 1, 3)
-
-# # Check C_table
-# print(_py_rinterpolate._rinterpolate_check_C_table(C_table, len(array)))
-
-# # Free C_table
-# _py_rinterpolate._rinterpolate_free_C_table(C_table)
-
-# # Check again
-# print(_py_rinterpolate._rinterpolate_check_C_table(C_table, len(array)))
-
-
-# import numpy as np
-
-# arr = np.array([1,2])
-# if not arr.dtype=='float64':
-#     arr = arr.astype(np.float)
-# print(arr.dtype)
-
-# print(arr)
 if __name__ == "__main__":
     unittest.main()
-

@@ -18,8 +18,33 @@ For a good description of the requirements and workings of the rinterpolate, see
 """
 
 import numpy as np
+import uuid
+import random
+import string
 
 from py_rinterpolate import _py_rinterpolate  # Import the c-module
+
+
+def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
+    return "".join(random.choice(chars) for _ in range(size))
+
+
+def verbose_print(message: str, verbosity: int, minimal_verbosity: int) -> None:
+    """
+    Function that decides whether to print a message based on the current verbosity
+    and its minimum verbosity
+
+    if verbosity is equal or higher than the minimum, then we print
+
+    Args:
+        message: message to print
+        verbosity: current verbosity level
+        minimal_verbosity: threshold verbosity above which to print
+    """
+
+    if verbosity >= minimal_verbosity:
+        print(message)
+
 
 class Rinterpolate(object):
     """
@@ -34,21 +59,28 @@ class Rinterpolate(object):
         nparams=-1,
         ndata=-1,
         usecache=0,
-        _dataspace=None, 
+        _dataspace=None,
         _localcache=None,
+        verbosity=0,
         **kwargs
     ):
         self.nparams = nparams  # Amount of parameters contained in the table
         self.ndata = ndata  # Amount of datapoints contained in a table row
         self.usecache = usecache  # Whether to use cache
         self._dataspace = _dataspace  # Dataspace memory capsule
-        self.nlines = None # Set to empty now. 
+        self.nlines = None  # Set to empty now.
+        self.verbosity = verbosity  # set verbosity
+        self.name = "rinterpolator-{}".format(id_generator(6))
+        self.verbosity = 2
+
+        verbose_print("Rinterpolate: creating {}".format(self.name), self.verbosity, 1)
 
         # Handle table. self.table holds the table, which upon input gets flattened. See module description
         if not table:
             self._table = []
         else:
             self._table = self._handle_table_setting(table)
+
 
         # Handle localcache
         if not _localcache:  # Holds information about the cached table
@@ -68,11 +100,19 @@ class Rinterpolate(object):
             self._dataspace = (
                 _py_rinterpolate._rinterpolate_alloc_dataspace_wrapper()
             )  # API call
-            # print('self._dataspace: {}'.format(self._dataspace))
+            verbose_print(
+                "{}: set up data location {}".format(self.name, self._dataspace),
+                self.verbosity,
+                1,
+            )
 
         # Check whether that was succesful
         if not self._dataspace:
-            print("Could not allocate memory for rinterpolate")
+            verbose_print(
+                "{}: Could not allocate memory for rinterpolate".format(self.name),
+                self.verbosity,
+                1,
+            )
             raise ValueError
 
     def _handle_table_setting(self, table):
@@ -80,8 +120,16 @@ class Rinterpolate(object):
         Function to check the input table and flatten it.
         """
 
+        verbose_print("{}: setting up table".format(self.name), self.verbosity, 1)
+
         if not ((isinstance(table, list)) or (isinstance(table, np.ndarray))):
-            print("Please input either a nested list of a nested numpy array")
+            verbose_print(
+                "{}: Please input either a nested list of a nested numpy array".format(
+                    self.name
+                ),
+                self.verbosity,
+                1,
+            )
             raise ValueError
 
         flattened_table = self._flatten(table)
@@ -111,17 +159,35 @@ class Rinterpolate(object):
 
         # Free the dataspace by passing the dataspace memory location to the freeing function
         if self._dataspace:
-            # print("freeing self._dataspace: {}".format(self._dataspace))
+            verbose_print(
+                "{}: freeing self._dataspace: {}".format(self.name, self._dataspace),
+                self.verbosity,
+                1,
+            )
+
             _py_rinterpolate._rinterpolate_free_dataspace_wrapper(
                 self._dataspace
             )  # API call
 
         # Free the C_table by passing the memory location to the free-ing function
         if self._localcache["C_table"]:
-            # print("freeing self._localcache['C_table']: {}".format(self._localcache["C_table"]))
+            verbose_print(
+                "{}: freeing self._localcache['C_table']: {}".format(
+                    self.name, self._localcache["C_table"]
+                ),
+                self.verbosity,
+                1,
+            )
+
             _py_rinterpolate._rinterpolate_free_C_table(
                 self._localcache["C_table"]
             )  # API call
+
+        verbose_print(
+            "{}: Freed memory and 'destroyed' the rinterpolator".format(self.name),
+            self.verbosity,
+            1,
+        )
 
     def DESTROY(self):
         """
@@ -135,9 +201,11 @@ class Rinterpolate(object):
         Clear the local cache
         """
 
+        verbose_print("{}: clearing localcache".format(self.name), self.verbosity, 1)
+
         # Remove it if it exists
         if self._localcache["C_table"]:
-            # rinterpolate_free_C_table(self._localcache['C_table']) # API call
+            rinterpolate_free_C_table(self._localcache["C_table"])  # API call
             self._localcache["C_table"] = None
             self._localcache["C_size"] = 1
 
@@ -218,8 +286,12 @@ class Rinterpolate(object):
 
         nlines = len(self._table) / (self.nparams + self.ndata)
         if not (nlines % 1 == 0):
-            print(
-                "Something went wrong in calculating the amount of lines. Found a fractional amount"
+            verbose_print(
+                "{}: Something went wrong in calculating the amount of lines. Found a fractional amount".format(
+                    self.name
+                ),
+                self.verbosity,
+                1,
             )
             raise ValueError
 
@@ -243,12 +315,18 @@ class Rinterpolate(object):
         #     }
         # }
 
+        verbose_print(
+            "{}: multiplying column {} by {}".format(self.name, column, factor),
+            self.verbosity,
+            1,
+        )
+
         # clear caches
         self.clear_localcache()
         nlines = self.return_nlines()
         nl = self.ndata + self.nparams  #
 
-        # Set the values TODO: Make use of vectorized calculations here. 
+        # Set the values TODO: Make use of vectorized calculations here.
         for i in range(nlines):
             self._table[i * nl + column] *= factor
 
@@ -260,6 +338,8 @@ class Rinterpolate(object):
         Rebuilding the cache gets done at interpolate
         """
 
+        verbose_print("{}: setting table".format(self.name), self.verbosity, 1)
+
         self.clear_localcache()
 
         self._table = self._handle_table_setting(new_table)
@@ -268,6 +348,8 @@ class Rinterpolate(object):
         """
         Function to flatten the input. calls the flatten_iterator function
         """
+
+        verbose_print("{}: flattening table".format(self.name), self.verbosity, 1)
 
         return list(self._flatten_iterator(table))
 
@@ -307,15 +389,23 @@ class Rinterpolate(object):
         """
 
         if not self._table:
-            print("Table not set or empty. Aborting")
+            verbose_print(
+                "{}: Table not set or empty. Aborting".format(self.name),
+                self.verbosity,
+                0,
+            )
             raise ValueError
 
         if self.ndata == -1:
-            print("Ndata is not set. Aborting")
+            verbose_print(
+                "{}: Ndata is not set. Aborting".format(self.name), self.verbosity, 0
+            )
             raise ValueError
 
         if self.nparams == -1:
-            print("Nparams is not set. Aborting")
+            verbose_print(
+                "{}: Nparams is not set. Aborting".format(self.name), self.verbosity, 0
+            )
             raise ValueError
 
         # put input in correct type
@@ -333,7 +423,10 @@ class Rinterpolate(object):
         ## check if an existing table requires an update.
         # If it doesnt match what we expect, then set it to 0
         if (not localcache["C_table"] == None) and (not localcache["C_size"] == n):
-            print("Freeying the table")
+            verbose_print(
+                "{}: Table changed. freeing table".format(self.name), self.verbosity, 1
+            )
+
             _py_rinterpolate._rinterpolate_free_C_table(localcache["C_table"])
 
             localcache["C_table"] = None
@@ -342,12 +435,22 @@ class Rinterpolate(object):
         # set up C copy of the table if we haven't
         # one already (or just freed it above)
         if localcache["C_table"] == None:
+            verbose_print(
+                "{}: Table not loaded in C. Loading now".format(self.name),
+                self.verbosity,
+                1,
+            )
+
             # print("Set table {}, nparams={}, ndata={}\n".format(self._table, self.nparams, self.ndata))
             localcache["C_table"] = _py_rinterpolate._rinterpolate_set_C_table(
                 self._table, self.nparams, self.ndata, nlines
             )
             # api call
             localcache["C_size"] = n
+
+        verbose_print(
+            "{}: interpolate table with {}".format(self.name, x), self.verbosity, 1
+        )
 
         # do the interpolation through librinterpolate
         result = _py_rinterpolate._rinterpolate_wrapper(
@@ -361,3 +464,6 @@ class Rinterpolate(object):
         )
 
         return result
+
+    def __str__(self):
+        return self.name
