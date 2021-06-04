@@ -71,7 +71,6 @@ class Rinterpolate(object):
         self.nlines = None  # Set to empty now.
         self.verbosity = verbosity  # set verbosity
         self.name = "rinterpolator-{}".format(id_generator(6))
-        self.verbosity = 2
 
         verbose_print("Rinterpolate: creating {}".format(self.name), self.verbosity, 1)
 
