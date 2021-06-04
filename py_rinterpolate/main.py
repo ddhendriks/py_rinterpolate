@@ -205,7 +205,9 @@ class Rinterpolate(object):
 
         # Remove it if it exists
         if self._localcache["C_table"]:
-            rinterpolate_free_C_table(self._localcache["C_table"])  # API call
+            _py_rinterpolate._rinterpolate_free_C_table(
+                self._localcache["C_table"]
+            )  # API call
             self._localcache["C_table"] = None
             self._localcache["C_size"] = 1
 
