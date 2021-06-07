@@ -47,11 +47,10 @@ h_files = [
 
 SOURCES = ["src/py_rinterpolate_interface.c"] + c_files
 HEADERS_FILES = h_files
-ALL_FILES = SOURCES + HEADERS_FILES
 
 PY_RINTERPOLATE_MODULE = Extension(
     name="py_rinterpolate._py_rinterpolate",
-    sources=ALL_FILES,
+    sources=SOURCES,
     include_dirs=[librinterpolate_src_path],
     extra_compile_args=[
         "-O3",
@@ -70,8 +69,7 @@ PY_RINTERPOLATE_MODULE = Extension(
     # define_macros=[("DEBUG", None)],
 )
 
-setup(headers=HEADERS_FILES,
-    name="py_rinterpolate",
+setup(name="py_rinterpolate",
     version="0.12.3",
     description="Python wrapper for the linear interpolation libryary rinterpolate (https://gitlab.eps.surrey.ac.uk/ri0005/librinterpolate)",
     author="David Hendriks, Robert Izzard",
@@ -86,6 +84,7 @@ setup(headers=HEADERS_FILES,
     install_requires=["numpy", "pytest",],
     python_requires=">=3.6",
     ext_modules=[PY_RINTERPOLATE_MODULE],
+    headers=HEADERS_FILES,
     packages=["py_rinterpolate",],
     classifiers=[
         "Development Status :: 3 - Alpha",
