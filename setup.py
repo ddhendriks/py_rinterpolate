@@ -47,10 +47,11 @@ h_files = [
 
 SOURCES = ["src/py_rinterpolate_interface.c"] + c_files
 HEADERS_FILES = h_files
+ALL_FILES = SOURCES + HEADERS_FILES
 
 PY_RINTERPOLATE_MODULE = Extension(
     name="py_rinterpolate._py_rinterpolate",
-    sources=SOURCES,
+    sources=ALL_FILES,
     include_dirs=[librinterpolate_src_path],
     extra_compile_args=[
         "-O3",
