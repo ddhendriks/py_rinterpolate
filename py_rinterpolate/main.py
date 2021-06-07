@@ -80,7 +80,6 @@ class Rinterpolate(object):
         else:
             self._table = self._handle_table_setting(table)
 
-
         # Handle localcache
         if not _localcache:  # Holds information about the cached table
             self._localcache = {
@@ -107,12 +106,13 @@ class Rinterpolate(object):
 
         # Check whether that was succesful
         if not self._dataspace:
+            msg = "{}: Could not allocate memory for rinterpolate".format(self.name)
             verbose_print(
-                "{}: Could not allocate memory for rinterpolate".format(self.name),
+                msg,
                 self.verbosity,
-                1,
+                0,
             )
-            raise ValueError
+            raise ValueError(msg)
 
     def _handle_table_setting(self, table):
         """
@@ -122,14 +122,15 @@ class Rinterpolate(object):
         verbose_print("{}: setting up table".format(self.name), self.verbosity, 1)
 
         if not ((isinstance(table, list)) or (isinstance(table, np.ndarray))):
-            verbose_print(
-                "{}: Please input either a nested list of a nested numpy array".format(
+            msg = "{}: Please input either a nested list of a nested numpy array".format(
                     self.name
-                ),
-                self.verbosity,
-                1,
             )
-            raise ValueError
+            verbose_print(
+                msg,
+                self.verbosity,
+                0,
+            )
+            raise ValueError(msg)
 
         flattened_table = self._flatten(table)
 
@@ -287,14 +288,15 @@ class Rinterpolate(object):
 
         nlines = len(self._table) / (self.nparams + self.ndata)
         if not (nlines % 1 == 0):
-            verbose_print(
-                "{}: Something went wrong in calculating the amount of lines. Found a fractional amount".format(
-                    self.name
-                ),
-                self.verbosity,
-                1,
+            msg = "{}: Something went wrong in calculating the amount of lines. Found a fractional amount".format(
+                self.name
             )
-            raise ValueError
+            verbose_print(
+                msg,
+                self.verbosity,
+                0,
+            )
+            raise ValueError(msg)
 
         return int(nlines)
 
@@ -390,24 +392,27 @@ class Rinterpolate(object):
         """
 
         if not self._table:
+            msg = "{}: Table not set or empty. Aborting".format(self.name)
             verbose_print(
-                "{}: Table not set or empty. Aborting".format(self.name),
+                msg,
                 self.verbosity,
                 0,
             )
-            raise ValueError
+            raise ValueError(msg)
 
         if self.ndata == -1:
+            msg = "{}: Ndata is not set. Aborting".format(self.name)
             verbose_print(
-                "{}: Ndata is not set. Aborting".format(self.name), self.verbosity, 0
+                msg, self.verbosity, 0
             )
-            raise ValueError
+            raise ValueError(msg)
 
         if self.nparams == -1:
+            msg = "{}: Nparams is not set. Aborting".format(self.name)
             verbose_print(
-                "{}: Nparams is not set. Aborting".format(self.name), self.verbosity, 0
+                msg, self.verbosity, 0
             )
-            raise ValueError
+            raise ValueError(msg)
 
         # put input in correct type
         input_x = [float(el) for el in x]
@@ -450,7 +455,7 @@ class Rinterpolate(object):
             localcache["C_size"] = n
 
         verbose_print(
-            "{}: interpolate table with {}".format(self.name, x), self.verbosity, 1
+            "{}: interpolate table with {}".format(self.name, x), self.verbosity, 2
         )
 
         # do the interpolation through librinterpolate
