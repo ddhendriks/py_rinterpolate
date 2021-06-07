@@ -458,6 +458,14 @@ class Rinterpolate(object):
             "{}: interpolate table with {}".format(self.name, x), self.verbosity, 2
         )
 
+        #
+        if not len(input_x)==self.nparams:
+            msg = "Error: {}: We input too many parameters! self.nparams: {} input_x: {}".format(self.name, self.nparams, input_x)
+            verbose_print(
+                msg, self.verbosity, 0
+            )
+            raise ValueError(msg)
+
         # do the interpolation through librinterpolate
         result = _py_rinterpolate._rinterpolate_wrapper(
             localcache["C_table"],
