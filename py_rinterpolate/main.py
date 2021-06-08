@@ -68,9 +68,9 @@ class Rinterpolate(object):
         self._dataspace = _dataspace  # Dataspace memory capsule
         self.nlines = None  # Set to empty now.
         self.verbosity = verbosity  # set verbosity
-        self.name = "rinterpolator-{}".format(id_generator(6))
+        self.name = "rinterpolator-{}".format(id_generator(8))
 
-        verbose_print("Rinterpolate: creating {}".format(self.name), self.verbosity, -10)
+        verbose_print("Rinterpolate: creating {}".format(self.name), self.verbosity, 0)
 
         # Handle table. self.table holds the table, which upon input gets flattened. See module description
         if not table:
