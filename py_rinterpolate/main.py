@@ -24,10 +24,8 @@ import string
 
 from py_rinterpolate import _py_rinterpolate  # Import the c-module
 
-
-def id_generator(size=6, chars=string.ascii_uppercase + string.digits):
+def id_generator(size=8, chars=string.ascii_uppercase + string.digits):
     return "".join(random.choice(chars) for _ in range(size))
-
 
 def verbose_print(message: str, verbosity: int, minimal_verbosity: int) -> None:
     """
@@ -72,7 +70,7 @@ class Rinterpolate(object):
         self.verbosity = verbosity  # set verbosity
         self.name = "rinterpolator-{}".format(id_generator(6))
 
-        verbose_print("Rinterpolate: creating {}".format(self.name), self.verbosity, 1)
+        verbose_print("Rinterpolate: creating {}".format(self.name), self.verbosity, -10)
 
         # Handle table. self.table holds the table, which upon input gets flattened. See module description
         if not table:
@@ -335,8 +333,8 @@ class Rinterpolate(object):
 
     def set_table(self, new_table):
         """
-        Sets new table data and flattens it. 
-        Both a normal list and a numpy array of floats is accepted. 
+        Sets new table data and flattens it.
+        Both a normal list and a numpy array of floats is accepted.
 
         Rebuilding the cache gets done at interpolate
         """
@@ -447,7 +445,6 @@ class Rinterpolate(object):
                 1,
             )
 
-            # print("Set table {}, nparams={}, ndata={}\n".format(self._table, self.nparams, self.ndata))
             localcache["C_table"] = _py_rinterpolate._rinterpolate_set_C_table(
                 self._table, self.nparams, self.ndata, nlines
             )
