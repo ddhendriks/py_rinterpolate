@@ -478,3 +478,16 @@ class Rinterpolate(object):
 
     def __str__(self):
         return self.name
+
+    def __del__(self):
+        """
+        Function that handles the freeing of the object. Should definitely only be called once, and that is handled now by the object itself
+        """
+
+        verbose_print(
+            "{}: dereferenced, destroying".format(self.name),
+            self.verbosity,
+            1,
+        )
+        self.destroy()
+
