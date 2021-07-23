@@ -156,31 +156,12 @@ class Rinterpolate(object):
         """
 
         # Free the dataspace by passing the dataspace memory location to the freeing function
-        if self._dataspace:
-            verbose_print(
-                "{}: freeing self._dataspace: {}".format(self.name, self._dataspace),
-                self.verbosity,
-                1,
-            )
-
-            _py_rinterpolate._rinterpolate_free_dataspace_wrapper(
-                self._dataspace
-            )  # API call
+        self.clear_dataspace()
 
         # Free the C_table by passing the memory location to the free-ing function
-        if self._localcache["C_table"]:
-            verbose_print(
-                "{}: freeing self._localcache['C_table']: {}".format(
-                    self.name, self._localcache["C_table"]
-                ),
-                self.verbosity,
-                1,
-            )
+        self.clear_localcache()
 
-            _py_rinterpolate._rinterpolate_free_C_table(
-                self._localcache["C_table"]
-            )  # API call
-
+        # 
         verbose_print(
             "{}: Freed memory and 'destroyed' the rinterpolator".format(self.name),
             self.verbosity,
@@ -194,20 +175,57 @@ class Rinterpolate(object):
 
         self.destroy()
 
+    def clear_dataspace(self):
+        """
+        Function to clear and free the dataspace
+        """
+
+        if self._dataspace:
+            verbose_print(
+                "{}: freeing self._dataspace: {}".format(self.name, self._dataspace),
+                self.verbosity,
+                1,
+            )
+
+            _py_rinterpolate._rinterpolate_free_dataspace_wrapper(
+                self._dataspace
+            )  # API call
+
+            self._dataspace = None
+        else:
+            verbose_print(
+                "{}: self._dataspace: {}: nothing to free".format(self.name, self._dataspace),
+                self.verbosity,
+                1,
+            )
+
     def clear_localcache(self):
         """
         Clear the local cache
         """
 
-        verbose_print("{}: clearing localcache".format(self.name), self.verbosity, 1)
-
-        # Remove it if it exists
         if self._localcache["C_table"]:
+            verbose_print(
+                "{}: freeing self._localcache['C_table']: {}".format(
+                    self.name, self._localcache["C_table"]
+                ),
+                self.verbosity,
+                1,
+            )
+
             _py_rinterpolate._rinterpolate_free_C_table(
                 self._localcache["C_table"]
             )  # API call
+
             self._localcache["C_table"] = None
             self._localcache["C_size"] = 1
+
+        else:
+            verbose_print(
+                "{}: self._localcache['C_table']: {}: nothing to free".format(self.name, self._dataspace),
+                self.verbosity,
+                1,
+            )
 
     def return_ndata(self, input_val=None):
         """
@@ -490,4 +508,3 @@ class Rinterpolate(object):
             1,
         )
         self.destroy()
-

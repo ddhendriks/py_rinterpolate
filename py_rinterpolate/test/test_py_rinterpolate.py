@@ -29,13 +29,13 @@ class TestClass(unittest.TestCase):
         """
 
         # Create the object
-        rinterpolator = Rinterpolate()
+        rinterpolator = Rinterpolate(verbosity=1)
 
         # Check if flattening works
         flattened_table = rinterpolator._flatten(self.INPUT_TABLE)
 
-        # Destroy the object
-        rinterpolator.destroy()
+        # # Destroy the object
+        # rinterpolator.destroy()
 
         assert flattened_table == [1, 2, 3, 4, 5, 6], "Flattening not working   "
 
@@ -45,17 +45,17 @@ class TestClass(unittest.TestCase):
         """
 
         # Create the object
-        rinterpolator = Rinterpolate()
+        rinterpolator = Rinterpolate(verbosity=1)
 
         print('Testing {} rinterpolator._localcache["C_table"]: {}'.format(rinterpolator, rinterpolator._localcache["C_table"]))
         print('Testing {} rinterpolator._dataspace: {}'.format(rinterpolator, rinterpolator._dataspace))
 
 
-        # Destroy the object
-        rinterpolator.destroy()
+        # # Destroy the object
+        # rinterpolator.destroy()
 
-        print('Testing {} rinterpolator._localcache["C_table"]: {}'.format(rinterpolator, rinterpolator._localcache["C_table"]))
-        print('Testing {} rinterpolator._dataspace: {}'.format(rinterpolator, rinterpolator._dataspace))
+        # print('Testing {} rinterpolator._localcache["C_table"]: {}'.format(rinterpolator, rinterpolator._localcache["C_table"]))
+        # print('Testing {} rinterpolator._dataspace: {}'.format(rinterpolator, rinterpolator._dataspace))
 
 
     def test_interpolate_compare_with_perl(self):
@@ -80,6 +80,7 @@ class TestClass(unittest.TestCase):
             table=test_data_table,  # Contains the table of data
             nparams=test_data_nparams,  # The amount of parameters in the table
             ndata=test_data_ndata,  # The amount of datapoints (the parameters that we want to interpolate)
+            verbosity=1
         )
         print("Set up interpolator")
 
@@ -101,8 +102,8 @@ class TestClass(unittest.TestCase):
         print("\tComparison output:\n\t\t{}".format(first_test_result))
         print("\tmax diff: {}".format(max(diff_list)))
 
-        # Destroy the object
-        rinterpolator.destroy()
+        # # Destroy the object
+        # rinterpolator.destroy()
 
         assert max(diff_list) < 1e-5, "Difference is too big"
 
@@ -121,14 +122,15 @@ class TestClass(unittest.TestCase):
             table=self.INPUT_TABLE,  # Contains the table of data
             nparams=self.NPARAMS,  # The amount of parameters in the table
             ndata=self.NDATA,  # The amount of datapoints (the parameters that we want to interpolate)
+            verbosity=1
         )
 
         rinterpolator.multiply_table_column(1, 2)
         compare_table = np.array([[1, 2, 3], [4, 5, 6]]) * [1, 2, 1]
         flattened_compare_table = rinterpolator._flatten(compare_table)
 
-        # Destroy the object
-        rinterpolator.destroy()
+        # # Destroy the object
+        # rinterpolator.destroy()
 
         assert rinterpolator._table == list(flattened_compare_table)
 
