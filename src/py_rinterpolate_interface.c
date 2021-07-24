@@ -205,7 +205,7 @@ static PyObject* rinterpolate_free_dataspace_wrapper(PyObject *self, PyObject *a
         }
         else
         {
-            debug_printf("rinterpolate_free_dataspace_wrapper: Incorrect capsule received. Expected a DATASPACE capsule\n");            
+            debug_printf("rinterpolate_free_dataspace_wrapper: Incorrect capsule received. Expected a DATASPACE capsule, received %s\n", PyCapsule_GetName(dataspace_mem_capsule));            
         }
     }
 
@@ -245,9 +245,8 @@ static PyObject* rinterpolate_free_C_table(PyObject *self, PyObject *args)
         }
         else
         {
-            debug_printf("rinterpolate_free_C_table: Incorrect capsule received. Expected a TABLE capsule\n");            
+            debug_printf("rinterpolate_free_C_table: Incorrect capsule received. Expected a TABLE capsule, received %s\n", PyCapsule_GetName(C_table_capsule));
         }
-
     }
 
     // TODO: mention to rob that this freeing doesnt `unset` the values in the table. 
@@ -281,12 +280,12 @@ static PyObject* rinterpolate_check_C_table(PyObject *self, PyObject *args)
         if (PyCapsule_IsValid(C_table_capsule, "TABLE"))
         {
             if (!(table = (double *) PyCapsule_GetPointer(C_table_capsule, "TABLE")))
-                return NULL;   
-            debug_printf("rinterpolate_check_C_table: Unpacked table pointer %p from capsule\n", (void *)table);                
+                return NULL;
+            debug_printf("rinterpolate_check_C_table: Unpacked table pointer %p from capsule\n", (void *)table);
         }
         else
         {
-            debug_printf("rinterpolate_check_C_table: Incorrect capsule received. Expected a TABLE capsule\n");            
+            debug_printf("rinterpolate_check_C_table: Incorrect capsule received. Expected a TABLE capsule, received %s\n", PyCapsule_GetName(C_table_capsule));
         }
     }
 
@@ -333,12 +332,12 @@ static PyObject* rinterpolate_wrapper(PyObject *self, PyObject *args)
         if (PyCapsule_IsValid(C_table_capsule, "TABLE"))
         {
             if (!(table = (double *) PyCapsule_GetPointer(C_table_capsule, "TABLE")))
-                return NULL;   
-            debug_printf("rinterpolate_wrapper: Unpacked table pointer %p from capsule\n", (void *)table);                
+                return NULL;
+            debug_printf("rinterpolate_wrapper: Unpacked table pointer %p from capsule\n", (void *)table);
         }
         else
         {
-            debug_printf("rinterpolate_wrapper: Incorrect capsule received. Expected a TABLE capsule\n");            
+            debug_printf("rinterpolate_wrapper: Incorrect capsule received. Expected a TABLE capsule, received %s\n", PyCapsule_GetName(C_table_capsule));
         }
     }
 
@@ -348,12 +347,12 @@ static PyObject* rinterpolate_wrapper(PyObject *self, PyObject *args)
         if (PyCapsule_IsValid(dataspace_mem_capsule, "DATASPACE"))
         {
             if (!(rinterpolate_data = (struct rinterpolate_data_t *) PyCapsule_GetPointer(dataspace_mem_capsule, "DATASPACE")))
-                return NULL;   
+                return NULL;
             debug_printf("rinterpolate_wrapper: Unpacked dataspace pointer %p from capsule\n", (void *)rinterpolate_data);                
         }
         else
         {
-            debug_printf("rinterpolate_wrapper: Incorrect capsule received. Expected a DATASPACE capsule\n");            
+            debug_printf("rinterpolate_wrapper: Incorrect capsule received. Expected a DATASPACE capsule, received %s\n", PyCapsule_GetName(dataspace_mem_capsule));
         }
     }
 
