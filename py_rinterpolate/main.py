@@ -222,7 +222,7 @@ class Rinterpolate(object):
 
         else:
             verbose_print(
-                "{}: self._localcache['C_table']: {}: nothing to free".format(self.name, self._dataspace),
+                "{}: self._localcache['C_table']: {}: nothing to free".format(self.name, self._localcache["C_table"]),
                 self.verbosity,
                 1,
             )

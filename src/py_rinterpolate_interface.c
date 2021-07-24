@@ -179,10 +179,6 @@ static PyObject* rinterpolate_set_C_table(PyObject *self, PyObject *args)
     return C_table_capsule;
 }
 
-
-
-
-
 /* 
  * Function to free the memory allocated for the dataspace. 
  * Takes a long int as input that represents the memory adress stored as an int

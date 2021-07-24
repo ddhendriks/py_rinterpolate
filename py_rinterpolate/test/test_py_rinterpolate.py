@@ -9,8 +9,6 @@ import test_data
 class TestClass(unittest.TestCase):
     """
     Unittest class
-
-    # https://stackoverflow.com/questions/17353213/init-for-unittest-testcase
     """
 
     def __init__(self, *args, **kwargs):
@@ -34,9 +32,6 @@ class TestClass(unittest.TestCase):
         # Check if flattening works
         flattened_table = rinterpolator._flatten(self.INPUT_TABLE)
 
-        # # Destroy the object
-        # rinterpolator.destroy()
-
         assert flattened_table == [1, 2, 3, 4, 5, 6], "Flattening not working   "
 
     def test_destroy(self):
@@ -49,13 +44,6 @@ class TestClass(unittest.TestCase):
 
         print('Testing {} rinterpolator._localcache["C_table"]: {}'.format(rinterpolator, rinterpolator._localcache["C_table"]))
         print('Testing {} rinterpolator._dataspace: {}'.format(rinterpolator, rinterpolator._dataspace))
-
-
-        # # Destroy the object
-        # rinterpolator.destroy()
-
-        # print('Testing {} rinterpolator._localcache["C_table"]: {}'.format(rinterpolator, rinterpolator._localcache["C_table"]))
-        # print('Testing {} rinterpolator._dataspace: {}'.format(rinterpolator, rinterpolator._dataspace))
 
 
     def test_interpolate_compare_with_perl(self):
@@ -102,20 +90,12 @@ class TestClass(unittest.TestCase):
         print("\tComparison output:\n\t\t{}".format(first_test_result))
         print("\tmax diff: {}".format(max(diff_list)))
 
-        # # Destroy the object
-        # rinterpolator.destroy()
-
         assert max(diff_list) < 1e-5, "Difference is too big"
 
     def test_multiply_table_column(self):
         """
         Unit test to see if the multiply column works
         """
-
-        # # Create the object
-        # rinterpolator = Rinterpolate()
-
-        # # Check if flattening works
 
         # Create the object
         rinterpolator = Rinterpolate(
@@ -129,8 +109,8 @@ class TestClass(unittest.TestCase):
         compare_table = np.array([[1, 2, 3], [4, 5, 6]]) * [1, 2, 1]
         flattened_compare_table = rinterpolator._flatten(compare_table)
 
-        # # Destroy the object
-        # rinterpolator.destroy()
+        # Destroy the object
+        rinterpolator.destroy()
 
         assert rinterpolator._table == list(flattened_compare_table)
 
