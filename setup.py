@@ -3,13 +3,10 @@ Setup script for py_rinterpolate
 
 https://docs.python.org/2.5/dist/describing-extensions.html
 """
+import os
 
-import setuptools
 from distutils.core import setup, Extension
 
-import os
-import subprocess
-import re
 
 # Functions
 def readme():
@@ -29,29 +26,29 @@ def license():
 ############################################################
 
 # Find all the files of the rinterpolate and add them to the sources
-librinterpolate_src_path = "src/librinterpolate/src"
+LIBRINTERPOLATE_SRC_PATH = "src/librinterpolate/src"
 
-path_contents = os.listdir(librinterpolate_src_path)
+PATH_CONTENTS = os.listdir(LIBRINTERPOLATE_SRC_PATH)
 
-c_files = [
-    os.path.join(librinterpolate_src_path, file)
-    for file in path_contents
+C_FILES = [
+    os.path.join(LIBRINTERPOLATE_SRC_PATH, file)
+    for file in PATH_CONTENTS
     if file.endswith(".c")
 ]
 
-h_files = [
-    os.path.join(librinterpolate_src_path, file)
-    for file in path_contents
+H_FILES = [
+    os.path.join(LIBRINTERPOLATE_SRC_PATH, file)
+    for file in PATH_CONTENTS
     if file.endswith(".h")
 ]
 
-SOURCES = ["src/py_rinterpolate_interface.c"] + c_files
-HEADERS_FILES = h_files
+SOURCES = ["src/py_rinterpolate_interface.c"] + C_FILES
+HEADERS_FILES = H_FILES
 
 PY_RINTERPOLATE_MODULE = Extension(
     name="py_rinterpolate._py_rinterpolate",
     sources=SOURCES,
-    include_dirs=[librinterpolate_src_path],
+    include_dirs=[LIBRINTERPOLATE_SRC_PATH],
     extra_compile_args=[
         "-O3",
         "-Wpedantic",
@@ -69,7 +66,8 @@ PY_RINTERPOLATE_MODULE = Extension(
     # define_macros=[("DEBUG", None)],
 )
 
-setup(name="py_rinterpolate",
+setup(
+    name="py_rinterpolate",
     version="0.13.0",
     description="Python wrapper for the linear interpolation library 'rinterpolate' (https://gitlab.eps.surrey.ac.uk/ri0005/librinterpolate)",
     author="David Hendriks, Robert Izzard",
