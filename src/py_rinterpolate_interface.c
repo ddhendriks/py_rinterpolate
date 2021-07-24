@@ -12,7 +12,7 @@
  * extra: https://docstore.mik.ua/orelly/perl2/advprog/ch20_03.htm
  * https://stackoverflow.com/questions/15287590/why-should-py-increfpy-none-be-required-before-returning-py-none-in-c
  ************************************************************/
-#define DEBUG
+
 #ifdef DEBUG
   #define debug_printf(fmt, ...)  printf(fmt, ##__VA_ARGS__);
 #else
